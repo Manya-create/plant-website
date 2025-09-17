@@ -1,0 +1,388 @@
+<!-- Save as: crop_monitor.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🌿 Smart Crop Health & Soil Monitoring</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px #b2c7b2;
+      padding: 48px 56px 36px 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .leaf-bg {
+      position: absolute;
+      right: -60px;
+      top: -60px;
+      width: 220px;
+      opacity: 0.10;
+      z-index: 0;
+    }
+    h1 {
+      color: #2e7d32;
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      z-index: 1;
+      position: relative;
+      font-weight: 700;
+    }
+    .desc {
+      color: #388e3c;
+      margin-bottom: 32px;
+      font-size: 1.13rem;
+      z-index: 1;
+      position: relative;
+      background: #e8f5e9;
+      border-radius: 10px;
+      padding: 12px 18px;
+      box-shadow: 0 1px 6px #c8e6c9;
+    }
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-weight: 600;
+      color: #388e3c;
+      font-size: 1.08rem;
+    }
+    select, input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1.5px solid #a5d6a7;
+      margin-bottom: 14px;
+      font-size: 1rem;
+      background: #f1f8e9;
+      color: #2e7d32;
+      transition: border 0.2s;
+    }
+    select:focus, input[type="number"]:focus, input[type="file"]:focus {
+      border: 1.5px solid #388e3c;
+      outline: none;
+    }
+    button {
+      background: linear-gradient(90deg, #43a047 0%, #81c784 100%);
+      color: #fff;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 10px;
+      font-size: 1.13rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 14px;
+      box-shadow: 0 2px 8px #a5d6a7;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 1px;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #388e3c 0%, #66bb6a 100%);
+      transform: translateY(-2px) scale(1.03);
+    }
+    .results {
+      margin-top: 36px;
+      padding: 28px 28px 16px 28px;
+      background: linear-gradient(120deg, #e8f5e9 60%, #c8e6c9 100%);
+      border-radius: 16px;
+      border-left: 8px solid #43a047;
+      box-shadow: 0 2px 8px #c8e6c9;
+      z-index: 1;
+      position: relative;
+      font-size: 1.08rem;
+    }
+    .section-title {
+      color: #256025;
+      margin-top: 22px;
+      margin-bottom: 9px;
+      font-weight: 700;
+      font-size: 1.18rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    ul {
+      margin: 0 0 12px 26px;
+      color: #388e3c;
+      font-size: 1.05rem;
+    }
+    .tag {
+      display: inline-block;
+      background: #a5d6a7;
+      color: #256025;
+      border-radius: 4px;
+      padding: 4px 12px;
+      margin: 2px 8px 2px 0;
+      font-size: 1em;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .photo-section {
+      margin: 22px 0 28px 0;
+      padding: 22px 22px 14px 22px;
+      background: linear-gradient(90deg, #e0f2f1 60%, #c8e6c9 100%);
+      border-radius: 14px;
+      border-left: 6px solid #43a047;
+      box-shadow: 0 1px 6px #b2dfdb;
+      z-index: 1;
+      position: relative;
+    }
+    .photo-preview {
+      margin-top: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+    .photo-preview img {
+      max-width: 140px;
+      max-height: 140px;
+      border-radius: 12px;
+      border: 2px solid #a5d6a7;
+      box-shadow: 0 1px 6px #b2dfdb;
+      background: #fff;
+      object-fit: cover;
+    }
+    .leaf-details {
+      color: #388e3c;
+      font-size: 1.08rem;
+      margin-top: 6px;
+      background: #f1f8e9;
+      border-radius: 8px;
+      padding: 10px 16px;
+      box-shadow: 0 1px 4px #c8e6c9;
+      min-width: 220px;
+      max-width: 340px;
+    }
+    .icon {
+      font-size: 1.2em;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .loader {
+      border: 4px solid #c8e6c9;
+      border-top: 4px solid #43a047;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+      display: block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    @media (max-width: 700px) {
+      .container { padding: 18px 6px; }
+      .leaf-bg { display: none; }
+      .photo-preview { flex-direction: column; gap: 10px; }
+      .leaf-details { min-width: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://cdn.pixabay.com/photo/2017/01/31/13/14/leaf-2022632_1280.png" class="leaf-bg" alt="Leaf background">
+    <h1>🌿 Smart Crop Health & Soil Monitoring</h1>
+    <div class="desc">
+      Upload a leaf photo and enter sensor data to get instant, AI-powered analysis of crop health, soil nutrients, and pest risks.<br>
+      <b>All results are simulated for demonstration.</b>
+    </div>
+    <div class="photo-section">
+      <label for="leafPhoto"><span class="icon">📷</span>Upload Leaf Photo (JPG/PNG)</label>
+      <input type="file" id="leafPhoto" accept="image/*">
+      <div class="photo-preview" id="photoPreview" style="display:none;">
+        <img id="leafImg" src="#" alt="Leaf Preview">
+        <div class="leaf-details" id="leafDetails"></div>
+      </div>
+      <div id="photoLoader" style="display:none;">
+        <div class="loader"></div>
+        <div style="color:#388e3c;text-align:center;margin-top:8px;">Analyzing leaf image...</div>
+      </div>
+    </div>
+    <form id="monitorForm">
+      <label for="crop"><span class="icon">🌾</span>Crop Type</label>
+      <select id="crop" required>
+        <option value="rice">Rice</option>
+        <option value="wheat">Wheat</option>
+        <option value="maize">Maize</option>
+        <option value="tomato">Tomato</option>
+      </select>
+      <label><span class="icon">🌈</span>Red Reflectance (0-1)</label>
+      <input type="number" id="red" min="0" max="1" step="0.01" value="0.3" required>
+      <label><span class="icon">🌈</span>NIR Reflectance (0-1)</label>
+      <input type="number" id="nir" min="0" max="1" step="0.01" value="0.6" required>
+      <label><span class="icon">🧪</span>Soil Nitrogen (mg/kg)</label>
+      <input type="number" id="N" min="0" max="100" step="0.1" value="20" required>
+      <label><span class="icon">🧪</span>Soil Phosphorus (mg/kg)</label>
+      <input type="number" id="P" min="0" max="100" step="0.1" value="15" required>
+      <label><span class="icon">🧪</span>Soil Potassium (mg/kg)</label>
+      <input type="number" id="K" min="0" max="100" step="0.1" value="12" required>
+      <label><span class="icon">🧪</span>Soil pH</label>
+      <input type="number" id="pH" min="3.5" max="9.0" step="0.1" value="6.5" required>
+      <button type="submit">🌱 Analyze</button>
+    </form>
+    <div class="results" id="results" style="display:none"></div>
+  </div>
+  <script>
+    // Example disease and fertilizer data
+    const diseases = {
+      rice: ["Rice Blast", "Bacterial Leaf Blight", "Sheath Blight"],
+      wheat: ["Wheat Rust", "Powdery Mildew", "Fusarium Head Blight"],
+      maize: ["Northern Leaf Blight", "Gray Leaf Spot", "Maize Streak Virus"],
+      tomato: ["Early Blight", "Late Blight", "Tomato Mosaic Virus"]
+    };
+    const fertilizers = {
+      N: "Urea (N)",
+      P: "DAP (N+P)",
+      K: "MOP (K)",
+      pH_low: "Lime",
+      pH_high: "Elemental Sulfur"
+    };
+
+    // Simulated AI leaf analysis with more advanced details
+    function analyzeLeafPhoto(file, crop) {
+      // Simulate analysis based on crop and randomization
+      const leafColors = [
+        { color: "Healthy Green", desc: "Leaf appears healthy with no visible symptoms." },
+        { color: "Yellowing", desc: "Possible nitrogen deficiency or early disease." },
+        { color: "Brown Spots", desc: "Possible fungal or bacterial infection." },
+        { color: "Wilting", desc: "Possible water stress or root issue." },
+        { color: "Curling", desc: "Possible pest attack or viral infection." }
+      ];
+      const idx = Math.floor(Math.random() * leafColors.length);
+      const disease = diseases[crop][Math.floor(Math.random() * diseases[crop].length)];
+      // Simulate more advanced details
+      const moisture = (Math.random() * 30 + 60).toFixed(1); // 60-90%
+      const chlorophyll = (Math.random() * 20 + 40).toFixed(1); // 40-60 units
+      const nitrogen = (Math.random() * 2 + 2).toFixed(2); // 2-4%
+      const healthStatus = idx === 0 ? "Healthy" : (idx === 1 ? "Moderate" : "Unhealthy");
+      const pest = Math.random() > 0.7 ? "Aphids detected" : "No major pests detected";
+      return {
+        color: leafColors[idx].color,
+        desc: leafColors[idx].desc,
+        disease: disease,
+        pest: pest,
+        moisture: moisture,
+        chlorophyll: chlorophyll,
+        nitrogen: nitrogen,
+        healthStatus: healthStatus
+      };
+    }
+
+    // Handle photo upload and preview with loader
+    document.getElementById('leafPhoto').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('photoPreview');
+      const img = document.getElementById('leafImg');
+      const details = document.getElementById('leafDetails');
+      const loader = document.getElementById('photoLoader');
+      if (file) {
+        preview.style.display = 'none';
+        loader.style.display = 'block';
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          setTimeout(() => {
+            img.src = ev.target.result;
+            preview.style.display = 'flex';
+            loader.style.display = 'none';
+            // Simulate AI analysis
+            const crop = document.getElementById('crop').value;
+            const analysis = analyzeLeafPhoto(file, crop);
+            details.innerHTML = `
+              <b>Health Status:</b> <span class="tag">${analysis.healthStatus}</span><br>
+              <b>Leaf Color:</b> <span class="tag">${analysis.color}</span><br>
+              <b>Moisture:</b> <span class="tag">${analysis.moisture}%</span><br>
+              <b>Chlorophyll:</b> <span class="tag">${analysis.chlorophyll} units</span><br>
+              <b>Nitrogen Content:</b> <span class="tag">${analysis.nitrogen}%</span><br>
+              <b>Analysis:</b> ${analysis.desc}<br>
+              <b>Possible Disease:</b> <span class="tag">${analysis.disease}</span><br>
+              <b>Pest Risk:</b> <span class="tag">${analysis.pest}</span>
+            `;
+          }, 1200); // Simulate analysis delay
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+        loader.style.display = 'none';
+        details.innerHTML = '';
+      }
+    });
+
+    // Update leaf analysis if crop changes and photo is present
+    document.getElementById('crop').addEventListener('change', function() {
+      const fileInput = document.getElementById('leafPhoto');
+      if (fileInput.files.length > 0) {
+        document.getElementById('leafPhoto').dispatchEvent(new Event('change'));
+      }
+    });
+
+    function randomPick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    document.getElementById('monitorForm').onsubmit = function(e) {
+      e.preventDefault();
+      const crop = document.getElementById('crop').value;
+      const N = parseFloat(document.getElementById('N').value);
+      const P = parseFloat(document.getElementById('P').value);
+      const K = parseFloat(document.getElementById('K').value);
+      const pH = parseFloat(document.getElementById('pH').value);
+
+      // Simulate disease detection
+      const disease = randomPick(diseases[crop]);
+
+      // Simulate nutrient deficiency
+      let deficiency = [];
+      if (N < 10) deficiency.push("Nitrogen (N)");
+      if (P < 10) deficiency.push("Phosphorus (P)");
+      if (K < 10) deficiency.push("Potassium (K)");
+      if (pH < 5.5) deficiency.push("Low pH");
+      if (pH > 7.5) deficiency.push("High pH");
+      if (deficiency.length === 0) deficiency.push("None detected");
+
+      // Simulate fertilizer recommendation
+      let recs = [];
+      if (N < 10) recs.push(fertilizers.N);
+      if (P < 10) recs.push(fertilizers.P);
+      if (K < 10) recs.push(fertilizers.K);
+      if (pH < 5.5) recs.push(fertilizers.pH_low);
+      if (pH > 7.5) recs.push(fertilizers.pH_high);
+      if (recs.length === 0) recs.push("No major fertilizer required.");
+
+      // Soil nutrients present
+      let present = [];
+      if (N >= 10) present.push("Nitrogen (N)");
+      if (P >= 10) present.push("Phosphorus (P)");
+      if (K >= 10) present.push("Potassium (K)");
+      if (pH >= 5.5 && pH <= 7.5) present.push("Balanced pH");
+
+      // Show results
+      document.getElementById('results').style.display = 'block';
+      document.getElementById('results').innerHTML = `
+        <div class="section-title"><span class="icon">🦠</span>Detected Disease/Pest</div>
+        <span class="tag">${disease}</span>
+        <div class="section-title"><span class="icon">🧪</span>Nutrient Deficiencies</div>
+        <ul>${deficiency.map(d => `<li>${d}</li>`).join('')}</ul>
+        <div class="section-title"><span class="icon">🌱</span>Fertilizer Recommendations</div>
+        <ul>${recs.map(r => `<li>${r}</li>`).join('')}</ul>
+        <div class="section-title"><span class="icon">🧬</span>Soil Nutrients Present</div>
+        <ul>${present.map(n => `<li>${n}</li>`).join('')}</ul>
+      `;
+    };
+  </script>
+</body>
+</html>
